@@ -884,11 +884,13 @@ CvSeq *cv::ocl::OclCascadeClassifier::oclHaarDetectObjects( oclMat &gimg, CvMemS
     //    bool roughSearch = (flags & CV_HAAR_DO_ROUGH_SEARCH) != 0;
 
     //the Intel HD Graphics is unsupported
+#if 0
     if (gimg.clCxt->impl->devName.find("Intel(R) HD Graphics") != string::npos)
     {
         cout << " Intel HD GPU device unsupported " << endl;
         return NULL;
     }
+#endif
 
     //double t = 0;
     if( maxSize.height == 0 || maxSize.width == 0 )
@@ -1090,7 +1092,8 @@ CvSeq *cv::ocl::OclCascadeClassifier::oclHaarDetectObjects( oclMat &gimg, CvMemS
         int endstage = gcascade->count;
         int startnode = 0;
         int pixelstep = gsum.step / 4;
-        int splitstage = 3;
+        //int splitstage = 3;
+		int splitstage = endstage;
         int splitnode = stage[0].count + stage[1].count + stage[2].count;
         cl_int4 p, pq;
         p.s[0] = gcascade->p0;
@@ -1294,7 +1297,8 @@ CvSeq *cv::ocl::OclCascadeClassifier::oclHaarDetectObjects( oclMat &gimg, CvMemS
         //clReleaseKernel(kernel2);
         int step = gsum.step / 4;
         int startnode = 0;
-        int splitstage = 3;
+        //int splitstage = 3;
+		int splitstage = endstage;
         int splitnode = stage[0].count + stage[1].count + stage[2].count;
         stagebuffer = openCLCreateBuffer(gsum.clCxt, CL_MEM_READ_ONLY, sizeof(GpuHidHaarStageClassifier) * gcascade->count);
         //openCLVerifyCall(status);
